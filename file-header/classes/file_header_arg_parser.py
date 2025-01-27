@@ -49,6 +49,9 @@ class ParserStrings:
   PATH_HELP_DESC: str =\
     'Path to file or directory to apply the header to'
 
+  HEADER_PATH_HELP_DESC: str =\
+    'Path to text file containing full header'
+
 #_______________________________________________________________________
 class FileHeaderArgParser:
 
@@ -70,6 +73,13 @@ class FileHeaderArgParser:
 
     parser.add_argument( '--path'
       , help=ParserStrings.PATH_HELP_DESC
+      , action='store'
+      , type=str
+      , required=True
+    )
+
+    parser.add_argument( '--header_path'
+      , help=ParserStrings.HEADER_PATH_HELP_DESC
       , action='store'
       , type=str
       , required=True

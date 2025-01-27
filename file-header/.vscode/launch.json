@@ -11,7 +11,9 @@
           [ "--file_ext"
             , "cpp"
             , "--path"
-            , "${workspaceFolder}/tests/flux"
+            , "${workspaceFolder}/tests"
+            , "--header_path"
+            , "${workspaceFolder}/header-strings/full-header-cpp.txt"
           ]
         }
       ]

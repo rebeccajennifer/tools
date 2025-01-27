@@ -33,6 +33,7 @@ from os import path, walk
 
 from classes.file_header_arg_parser import FileHeaderArgParser
 from classes.file_header_strings import FileHeaderStrings
+from classes.header_insert import HeaderInsert
 
 '''
 if directory
@@ -82,8 +83,19 @@ if __name__ == '__main__':
   if ext and ext[0] == '.':
     ext = ext[1:len(ext)]
 
+  #_____________________________________________________________________
   # TODO implement modification of file headers by file type
+  #_____________________________________________________________________
   comment_delim = FileHeaderStrings.COMMENT_DELIMETERS[ext]
+  #_____________________________________________________________________
+
+  header_str: str = ''
+
+  if path.isfile(args.header_path):
+    with open (args.header_path, 'r') as file:
+
+      header_str = file.read()
+
 
   if (path.isfile(args.path)):
     print('you entered a file')
@@ -93,7 +105,15 @@ if __name__ == '__main__':
 
     for root, dirs, files in walk(args.path):
       for f in files:
-        print(f)
+        file_path = path.join(root, f)
+        HeaderInsert.insert_full_header(header_str, file_path)
+
+  header_str: str = ''
+
+  if path.isfile(args.header_path):
+    with open (args.header_path, 'r') as file:
+
+      header_str = file.read()
 
 
 
