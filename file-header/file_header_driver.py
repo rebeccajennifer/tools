@@ -28,6 +28,12 @@
 # indicated in a file.
 #_______________________________________________________________________
 
+import argparse
+from os import path, walk
+
+from classes.file_header_arg_parser import FileHeaderArgParser
+from classes.file_header_strings import FileHeaderStrings
+
 '''
 if directory
     walk through each file and replace or add
@@ -61,3 +67,33 @@ replace-text(delimiter, text)
 
     if no delimiter again
 '''
+
+#_______________________________________________________________________
+if __name__ == '__main__':
+
+  parser: argparse.ArgumentParser = argparse.ArgumentParser()
+  FileHeaderArgParser.init_parser(parser)
+
+  args: argparse.Namespace = parser.parse_args()
+
+  ext: str = args.file_ext
+
+  # trim period from extension
+  if ext and ext[0] == '.':
+    ext = ext[1:len(ext)]
+
+  # TODO implement modification of file headers by file type
+  comment_delim = FileHeaderStrings.COMMENT_DELIMETERS[ext]
+
+  if (path.isfile(args.path)):
+    print('you entered a file')
+
+  if (path.isdir(args.path)):
+    print('you entered a path')
+
+    for root, dirs, files in walk(args.path):
+      for f in files:
+        print(f)
+
+
+

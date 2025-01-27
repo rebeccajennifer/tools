@@ -1,0 +1,19 @@
+{
+  "version":        "0.2.0"
+  , "configurations":
+      [
+        { "name": "test"
+        , "type": "debugpy"
+        , "request": "launch"
+        , "program": "${workspaceFolder}/file_header_driver.py"
+        , "console": "integratedTerminal"
+        , "args":
+          [ "--file_ext"
+            , "cpp"
+            , "--path"
+            , "${workspaceFolder}/tests/flux"
+          ]
+        }
+      ]
+
+}
