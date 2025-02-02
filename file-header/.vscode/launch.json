@@ -16,6 +16,22 @@
             , "${workspaceFolder}/header-strings/full-header-cpp.txt"
           ]
         }
+        ,
+        { "name": "color-clock"
+        , "type": "debugpy"
+        , "request": "launch"
+        , "program": "${workspaceFolder}/file_header_driver.py"
+        , "console": "integratedTerminal"
+        , "args":
+          [ "--file_ext"
+            , "cpp"
+            , "--path"
+            , "~/git/color-clock/sw/arduino/color-clock-driver"
+            , "--header_path"
+            , "${workspaceFolder}/header-strings/full-header-cpp.txt"
+          ]
+        }
+
       ]
 
 }
