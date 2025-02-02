@@ -105,8 +105,15 @@ if __name__ == '__main__':
 
     for root, dirs, files in walk(args.path):
       for f in files:
+        _name, _ext  = path.splitext(f)
+        _ext = _ext.lstrip('.')
+
         file_path = path.join(root, f)
-        HeaderInsert.insert_full_header(header_str, file_path)
+
+        cpp_ext = ['c', 'cpp', 'h', 'hpp', 'ino']
+
+        if (_ext in cpp_ext):
+          HeaderInsert.insert_full_header(header_str, file_path)
 
   header_str: str = ''
 
