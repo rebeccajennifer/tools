@@ -89,6 +89,7 @@ class PdfReorderParser:
 
     parser.add_argument\
     ( '--file_path'
+    , '-f'
     , help=ParserStrings.FILE_PATH_DESC
     , action='store'
     , type=str
@@ -97,6 +98,7 @@ class PdfReorderParser:
 
     parser.add_argument\
     ( '--output_dir'
+    , '-o'
     , help=ParserStrings.OUT_DIR_DESC
     , action='store'
     , type=str
@@ -105,7 +107,8 @@ class PdfReorderParser:
     )
 
     parser.add_argument\
-    ( '--pdf_start_page'
+    ( '--start_pg'
+    , '-s'
     , help=ParserStrings.START_PAGE_DESC
     , action='store'
     , type=PdfReorderParser.positive_int
@@ -113,7 +116,8 @@ class PdfReorderParser:
     )
 
     parser.add_argument\
-    ( '--pdf_end_page'
+    ( '--end_pg'
+    , '-e'
     , help=ParserStrings.END_PAGE_DESC
     , action='store'
     , type=PdfReorderParser.positive_int
