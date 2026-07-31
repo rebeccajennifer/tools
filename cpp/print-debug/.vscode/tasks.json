@@ -6,6 +6,7 @@
     , "command": "g++"
     , "args":
       [ "${workspaceFolder}/test-print.cpp"
+      , "-g"
       , "-o"
       , "a.out"
       ]
@@ -21,21 +22,10 @@
     , "args":
       [ ""
       ]
-    , "problemMatcher": []
-    , "presentation":
-      { "close": true
-      }
-    }
-
-  , { "label": "compile-and-run-test-print-debug"
     , "dependsOn":
       [ "compile-print-debug-test"
-      , "run-print-debug-test"
       ]
     , "problemMatcher": []
-    , "presentation":
-      { "close": true
-      }
     }
   ]
 }
