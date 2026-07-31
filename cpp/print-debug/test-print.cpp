@@ -36,7 +36,7 @@
 /// \brief Example usage of PrintDebug class.
 int main()
 {
-  uint64_t foo = 0xABFF;
+  uint64_t foo = 0x11223344ffABFF;
   uint8_t char_limit = 60;
   PrintDebug::print_mem_bytes(&foo, sizeof(foo), char_limit, 2, "bleh");
 

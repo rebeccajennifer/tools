@@ -109,7 +109,7 @@ class PrintDebug
     // Offset list - bytes per line
     // E.g. "+3  +2  +1  +0"
     memset(temp, 0, temp_len);
-    for (int8_t i = bytes_per_line; i > 0; i--)
+    for (int8_t i = bytes_per_line - 1; i >= 0; i--)
     {
       memset(temp, 0, temp_len);
       snprintf
