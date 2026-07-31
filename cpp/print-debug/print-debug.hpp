@@ -76,12 +76,15 @@ class PrintDebug
   , size_t byte_count
   , uint16_t char_limit = 1024
   , uint8_t  bytes_per_line = 4
-  , const char* optional_str = ""
+  , const char* optional_str = 0x00
   )
   {
-    //
+    // Cast input pointer as uint8 pointer for printing
     uint8_t * byte_ptr = static_cast<uint8_t*>(ptr);
     char print_ptr[char_limit];
+
+    snprintf(print_ptr, char_limit, "  Start address: %p\r\n", byte_ptr);
+    check_and_flush_buffer(print_ptr, char_limit, char_limit);
 
     // Add optional string.
     if (optional_str != nullptr)
@@ -102,21 +105,22 @@ class PrintDebug
     snprintf
     ( table_header
     , temp_len
-    , "\n  %-*s  "
+    , "\r\n  %-*s  "
     , ptr_size, "Address  "
     );
 
+    check_and_flush_buffer(print_ptr, char_limit, char_limit);
     // Offset list - bytes per line
     // E.g. "+3  +2  +1  +0"
     memset(temp, 0, temp_len);
-    for (int8_t i = bytes_per_line - 1; i >= 0; i--)
+    for (int8_t i = bytes_per_line; i > 0; i--)
     {
       memset(temp, 0, temp_len);
       snprintf
       ( temp
       , temp_len
       , "+%d  "
-      , i);
+      , i-1);
       strcat(table_header, temp);
     }
 
@@ -128,14 +132,21 @@ class PrintDebug
     uint8_t line_length = strlen(table_header) - 1;
     //__________________________________________________________________
     strcat(print_ptr, table_header);
-    strcat(print_ptr, "\n");
+    strcat(print_ptr, "\r\n");
 
-    check_and_flush_buffer(print_ptr, char_limit, line_length);
+    check_and_flush_buffer(print_ptr, char_limit, char_limit);
 
+    //__________________________________________________________________
     // Print underline under table header.
+
+    // Reset temp
     memset(temp, 0, temp_len);
+
+    // Create temp
     memset(temp, '_', line_length);
+    strcat(temp, "\r\n");
     strcat(print_ptr, temp);
+
 
     // Calculate remaining characters left in buffer.
     check_and_flush_buffer(print_ptr, char_limit, line_length);
@@ -143,19 +154,32 @@ class PrintDebug
     // Print bytes in groups of bytes_per_line.
     // Print in reverse order so lower addresses are at the bottom
     // of table output.
-    for(int i = byte_count -  1; i >= 0; i--)
+for(int i = byte_count - 1; i >= 0; i--)
     {
-      // Print address at the start of each 4-byte group.
-      if (reinterpret_cast<uintptr_t>(&byte_ptr[i+1]) % bytes_per_line == 0)
+      uintptr_t addr = reinterpret_cast<uintptr_t>(&byte_ptr[i]);
+
+      // Start a new line at the highest byte of each aligned group,
+      // and label it with the group's base address.
+      if (addr % bytes_per_line == bytes_per_line - 1)
       {
         check_and_flush_buffer(print_ptr, char_limit, line_length);
-        snprintf(temp, temp_len, "\n  %*p  ", ptr_size, &byte_ptr[i+1]);
+        snprintf
+        ( temp
+        , temp_len
+        , "\r\n  %*p  "
+        , ptr_size
+        , reinterpret_cast<void*>(addr - (bytes_per_line - 1))
+        );
         strcat(print_ptr, temp);
       }
 
       snprintf(temp, 16, "%02X  ", byte_ptr[i]);
       strcat(print_ptr, temp);
     }
+
+    // Ensure next console output starts at beginning of next line
+    snprintf(temp, 16, "\r\n");
+    strcat(print_ptr, temp);
 
     printf("%s", print_ptr);
     return;
