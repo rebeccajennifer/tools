@@ -38,7 +38,7 @@ int main()
 {
   uint64_t foo = 0xff11223344ffABFF;
   uint8_t char_limit = 128;
-  PrintDebug::print_mem_bytes(&foo, sizeof(foo), char_limit, 2);
+  PrintDebug::print_mem_bytes(&foo, sizeof(foo), char_limit, 1);
 
   printf("\n\n\n");
 }

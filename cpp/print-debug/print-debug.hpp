@@ -151,30 +151,61 @@ class PrintDebug
     // Calculate remaining characters left in buffer.
     check_and_flush_buffer(print_ptr, char_limit, line_length);
 
+    // Nothing to print. Flush header and leave.
+    if (byte_count == 0)
+    {
+      printf("%s", print_ptr);
+      return;
+    }
+
     // Print bytes in groups of bytes_per_line.
     // Print in reverse order so lower addresses are at the bottom
-    // of table output.
-for(int i = byte_count - 1; i >= 0; i--)
-    {
-      uintptr_t addr = reinterpret_cast<uintptr_t>(&byte_ptr[i]);
+    // of table output. Columns outside the requested range print '--'
+    // and are never dereferenced.
+    uintptr_t start_addr = reinterpret_cast<uintptr_t>(byte_ptr);
+    uintptr_t end_addr   = start_addr + byte_count - 1;
 
-      // Start a new line at the highest byte of each aligned group,
-      // and label it with the group's base address.
-      if (addr % bytes_per_line == bytes_per_line - 1)
+    // Rows are aligned to bytes_per_line boundaries.
+    uintptr_t top_base    = end_addr   - (end_addr   % bytes_per_line);
+    uintptr_t bottom_base = start_addr - (start_addr % bytes_per_line);
+
+    for (uintptr_t base = top_base; ; base -= bytes_per_line)
+    {
+      check_and_flush_buffer(print_ptr, char_limit, line_length);
+
+      snprintf
+      ( temp
+      , temp_len
+      , "\r\n  %*p  "
+      , ptr_size
+      , reinterpret_cast<void*>(base)
+      );
+      strcat(print_ptr, temp);
+
+      for (int col = bytes_per_line - 1; col >= 0; col--)
       {
-        check_and_flush_buffer(print_ptr, char_limit, line_length);
-        snprintf
-        ( temp
-        , temp_len
-        , "\r\n  %*p  "
-        , ptr_size
-        , reinterpret_cast<void*>(addr - (bytes_per_line - 1))
-        );
-        strcat(print_ptr, temp);
+        uintptr_t addr = base + col;
+
+        if (addr < start_addr || addr > end_addr)
+        {
+          strcat(print_ptr, "--  ");
+        }
+        else
+        {
+          snprintf
+          ( temp
+          , temp_len
+          , "%02X  "
+          , *reinterpret_cast<uint8_t*>(addr)
+          );
+          strcat(print_ptr, temp);
+        }
       }
 
-      snprintf(temp, 16, "%02X  ", byte_ptr[i]);
-      strcat(print_ptr, temp);
+      if (base == bottom_base)
+      {
+        break;
+      }
     }
 
     // Ensure next console output starts at beginning of next line
@@ -187,4 +218,3 @@ for(int i = byte_count - 1; i >= 0; i--)
 };
 
 #endif
-
