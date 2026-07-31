@@ -1,0 +1,31 @@
+{ "version": "2.0.0"
+, "tasks":
+  [
+    { "label": "compile-print-debug-test"
+    , "type": "shell"
+    , "command": "g++"
+    , "args":
+      [ "${workspaceFolder}/test-print.cpp"
+      , "-g"
+      , "-o"
+      , "a.out"
+      ]
+    , "presentation":
+      { "close": true
+      }
+    , "problemMatcher": []
+    }
+
+  , { "label": "run-print-debug-test"
+    , "type": "shell"
+    , "command": "${workspaceFolder}/a.out"
+    , "args":
+      [ ""
+      ]
+    , "dependsOn":
+      [ "compile-print-debug-test"
+      ]
+    , "problemMatcher": []
+    }
+  ]
+}

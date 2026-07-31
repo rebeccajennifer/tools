@@ -1,1 +1,7 @@
+# Temp files
 __pycache__
+.pytest_cache
+
+# Build artifacts
+.out
+.o
