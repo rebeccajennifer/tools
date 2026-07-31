@@ -79,12 +79,27 @@ class PrintDebug
   , const char* optional_str = 0x00
   )
   {
+
     // Cast input pointer as uint8 pointer for printing
     uint8_t * byte_ptr = static_cast<uint8_t*>(ptr);
     char print_ptr[char_limit];
 
     snprintf(print_ptr, char_limit, "  Start address: %p\r\n", byte_ptr);
     check_and_flush_buffer(print_ptr, char_limit, char_limit);
+
+    if (byte_count == 0 || bytes_per_line == 0)
+    {
+      printf("  byte_count or bytes_per_line set to 0. "
+        "Nothing to print.\n");
+      return;
+    }
+
+    // Nothing to print. Flush header and leave.
+    if (bytes_per_line == 0)
+    {
+      printf("%s", print_ptr);
+      return;
+    }
 
     // Add optional string.
     if (optional_str != nullptr)
@@ -151,12 +166,6 @@ class PrintDebug
     // Calculate remaining characters left in buffer.
     check_and_flush_buffer(print_ptr, char_limit, line_length);
 
-    // Nothing to print. Flush header and leave.
-    if (byte_count == 0)
-    {
-      printf("%s", print_ptr);
-      return;
-    }
 
     // Print bytes in groups of bytes_per_line.
     // Print in reverse order so lower addresses are at the bottom
